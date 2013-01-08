@@ -5,11 +5,11 @@ import requests
 import json
 
 from hellosign import BaseApiClient
-from hellosign.hellosign import HelloSign, HelloSignSignature
-from hellosign.hellosign import HelloSigner, HelloDoc
+from hellosign import HelloSign, HelloSignSignature
+from hellosign import HelloSigner, HelloDoc
 
 
-class TestBaseApiClient(mocktest.TestCase):
+class TestCase(mocktest.TestCase):
     def setUp(self):
         self.test_uri = 'http://example.com'
         self.auth = ('monkey', 'password')

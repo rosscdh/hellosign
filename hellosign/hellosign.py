@@ -1,20 +1,9 @@
-import requests
-from wtforms import Form, TextField, validators
-
-from . import BaseApiClient
+from .api import BaseApiClient
+from .hello_objects import HelloSigner, HelloDoc
 
 
 class HelloSign(BaseApiClient):
     base_uri = 'https://api.hellosign.com/v3/'
-
-
-class HelloSigner(Form):
-    name = TextField('Name', [validators.Length(min=2, max=32)])
-    email = TextField('Email Address', [validators.Length(min=6, max=128), validators.Email()])
-
-
-class HelloDoc(Form):
-    name = TextField('name', [validators.Length(min=1, max=25)])
 
 
 class HelloSignSignature(HelloSign):
