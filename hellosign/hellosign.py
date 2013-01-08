@@ -38,14 +38,20 @@ class HelloSignSignature(HelloSign):
         if isinstance(signer, HelloSigner) and signer.validate():
             self.signers.append(signer.data)
         else:
-            raise Exception("add_signer signer must be an instance of class HelloSigner")
+            if not signer.validate():
+                raise Exception("HelloSigner Errors %s" % (signers.errors,))
+            else:
+                raise Exception("add_signer signer must be an instance of class HelloSigner")
 
     def add_doc(self, doc):
         """ Simple dict of {'name': '@filename.pdf'}"""
         if isinstance(doc, HelloDoc) and doc.validate():
             self.docs.append(doc.data)
         else:
-            raise Exception("add_doc doc must be an instance of class HelloDoc")
+            if not doc.validate():
+                raise Exception("HelloDoc Errors %s" % (doc.errors,))
+            else:
+                raise Exception("add_doc doc must be an instance of class HelloDoc")
 
     def validate(self):
         if len(self.signers) == 0:

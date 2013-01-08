@@ -35,6 +35,33 @@ class TestHelloSign(mocktest.TestCase):
         eq_(self.subject.base_uri, self.test_uri)
 
 
+class TestHelloSigner(mocktest.TestCase):
+    def setUp(self):
+        self.subject = HelloSigner(**{'email':'bob@example.com', 'name': 'Bob Examplar'})
+
+    def test_IsValid(self):
+        assert self.subject.validate() == True
+
+    def test_InValid(self):
+        subject = HelloSigner(**{'email':'bob', 'name': 'Bob Examplar'})
+        assert subject.validate() == False
+
+
+class TestHelloDoc(mocktest.TestCase):
+    def setUp(self):
+        self.subject = HelloDoc(**{'name': 'filename.pdf'})
+
+    def test_IsValid(self):
+        assert self.subject.validate() == True
+
+    def test_InValid(self):
+        subject = HelloDoc(**{'name': ''})
+        assert subject.validate() == False
+
+        subject = HelloDoc(**{'monkies': ''})
+        assert subject.validate() == False
+
+
 class TestHelloSignSignature(mocktest.TestCase):
     def setUp(self):
         self.test_uri = 'http://example.com'
@@ -76,7 +103,7 @@ class TestHelloSignSignature(mocktest.TestCase):
         response = subject.create(auth=self.auth)
         self.assertEqual(response, {})
 
-    def test_SignatureData(self):
+    def test_ValidSignatureData(self):
         subject = HelloSignSignature(base_uri=self.test_uri, title='title', subject='My Subject', message='My Message')
         when(subject).create(auth=self.auth).then_return({})
 
@@ -84,4 +111,11 @@ class TestHelloSignSignature(mocktest.TestCase):
         subject.add_doc(HelloDoc(**{'name': '@filename.pdf'}))
 
         json_data = json.dumps(subject.data())
-        self.assertEqual(json_data, 1)
+        self.assertEqual(json_data, '{"files": ["@filename.pdf"], "message": "My Message", "title": "title", "signers": [{"email_address": "bob@example.com", "name": "Bob Examplar"}], "subject": "My Subject"}')
+
+    def test_InValidSignatureData(self):
+        subject = HelloSignSignature(base_uri=self.test_uri, title='title', subject='My Subject', message='My Message')
+        when(subject).create(auth=self.auth).then_return({})
+
+        self.assertRaises(Exception, lambda: subject.add_signer(HelloSigner(**{'email':'bob_no_email'})))
+        self.assertRaises(Exception, lambda: subject.add_doc(HelloDoc(**{'noob': ''})))
