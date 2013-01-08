@@ -1,13 +1,14 @@
 import os
-import inspect
 import requests
 
 
-class HelloClient(object):
+class BaseApiClient(object):
     base_uri = None
+    r = None
     _resources = []
-
     def __init__(self, *args, **kwargs):
+        self._resources = []
+        self.r = requests
         self.base_uri = None if 'base_uri' not in kwargs else kwargs['base_uri']
 
     def __getattr__(self, key):
@@ -15,7 +16,6 @@ class HelloClient(object):
         return self
 
     def __getitem__(self, key):
-        print key
         self._resources.append(key)
         return self
 
@@ -30,19 +30,19 @@ class HelloClient(object):
         return url
 
     def get(self, auth=None, **kwargs):
-        return requests.get(self.url, auth=auth, params=kwargs)
+        return self.r.get(self.url, auth=auth, params=kwargs)
 
     def head(self, auth=None, **kwargs):
-        return requests.head(self.url, auth=auth, params=kwargs)
+        return self.r.head(self.url, auth=auth, params=kwargs)
 
     def options(self, auth=None, **kwargs):
-        return requests.options(self.url, auth=auth, params=kwargs)
+        return self.r.options(self.url, auth=auth, params=kwargs)
 
     def delete(self, auth=None, **kwargs):
-        return requests.delete(self.url, auth=auth, params=kwargs)
+        return self.r.delete(self.url, auth=auth, params=kwargs)
 
     def post(self, data=None, auth=None, **kwargs):
-        return requests.post(self.url, auth=auth, data=data, params=kwargs)
+        return self.r.post(self.url, auth=auth, data=data, params=kwargs)
 
     def put(self, data=None, auth=None, **kwargs):
-        return requests.put(self.url, auth=auth, data=data, params=kwargs)
+        return self.r.put(self.url, auth=auth, data=data, params=kwargs)

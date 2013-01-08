@@ -1,46 +1,72 @@
 import requests
-from restkit import BasicAuth
+from wtforms import Form, TextField, validators
 
-from . import HelloClient
+from . import BaseApiClient
 
 
-class HelloSign(HelloClient):
+class HelloSign(BaseApiClient):
     base_uri = 'https://api.hellosign.com/v3/'
-    url_path = None
-    params = {}
-    auth = None
-
-    def __init__(self, *args, **kwargs):
-        kwargs['base_uri'] = kwargs['base_uri'] if 'base_uri' in kwargs else self.base_uri
-
-        super(HelloSign, self).__init__(*args, **kwargs)
 
 
-class Signature(HelloSign):
+class HelloSigner(Form):
+    name = TextField('Name', [validators.Length(min=2, max=32)])
+    email = TextField('Email Address', [validators.Length(min=6, max=128), validators.Email()])
+
+
+class HelloDoc(Form):
+    name = TextField('name', [validators.Length(min=1, max=25)])
+
+
+class HelloSignSignature(HelloSign):
     params = {}
     signers = []
     docs = []
 
     def __init__(self, title, subject, message, *args, **kwargs):
+        self.params = {}
+        self.signers = []
+        self.docs = []
+
         self.params['title'] = title
         self.params['subject'] = subject
         self.params['message'] = message
 
-        super(Signature, self).__init__(*args, **kwargs)
+        super(HelloSignSignature, self).__init__(*args, **kwargs)
 
     def add_signer(self, signer):
         """ Simple dict of {'name': 'John Doe', 'email': 'name@example.com'}"""
-        self.signers.append(signer)
+        if isinstance(signer, HelloSigner) and signer.validate():
+            self.signers.append(signer.data)
+        else:
+            raise Exception("add_signer signer must be an instance of class HelloSigner")
 
     def add_doc(self, doc):
         """ Simple dict of {'name': '@filename.pdf'}"""
-        self.docs.append(doc)
+        if isinstance(doc, HelloDoc) and doc.validate():
+            self.docs.append(doc.data)
+        else:
+            raise Exception("add_doc doc must be an instance of class HelloDoc")
 
     def validate(self):
         if len(self.signers) == 0:
             raise AttributeError('You need to specify at least 1 person as a signer')
         if len(self.docs) == 0:
             raise AttributeError('You need to specify at least 1 document')
+
+    def data(self):
+        data = {
+        'signers': [],
+        'files': []
+        }
+
+        for i,signer in enumerate(self.signers):
+            data['signers'].append({'email_address': signer['email'], 'name': signer['name']})
+
+        for i,doc in enumerate(self.docs):
+            data['files'].append(doc['name'])
+
+        data.update(self.params)
+        return data
 
     def create(self, *args, **kwargs):
         auth = None
@@ -50,4 +76,4 @@ class Signature(HelloSign):
 
         self.validate()
 
-        return self.signature_request.send.post(auth=auth, data=self.params, **kwargs)
+        return self.signature_request.send.post(auth=auth, data=self.data(), **kwargs)

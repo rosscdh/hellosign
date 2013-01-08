@@ -2,8 +2,27 @@ from nose.tools import *
 from mocktest import *
 
 import requests
+import json
 
-from hellosign.hellosign import HelloSign, Signature
+from hellosign import BaseApiClient
+from hellosign.hellosign import HelloSign, HelloSignSignature
+from hellosign.hellosign import HelloSigner, HelloDoc
+
+
+class TestBaseApiClient(mocktest.TestCase):
+    def setUp(self):
+        self.test_uri = 'http://example.com'
+        self.auth = ('monkey', 'password')
+        self.subject = BaseApiClient(base_uri=self.test_uri)
+
+        when(self.subject).get().then_return({})
+
+    def test_hellosignclient_init(self):
+        eq_(self.subject.base_uri, self.test_uri)
+
+    def test_client_baseuri_path(self):
+        self.subject.go.to.this.path.get()
+        eq_(self.subject.url, 'http://example.com/go/to/this/path')
 
 
 class TestHelloSign(mocktest.TestCase):
@@ -16,38 +35,53 @@ class TestHelloSign(mocktest.TestCase):
         eq_(self.subject.base_uri, self.test_uri)
 
 
-class TestSignature(mocktest.TestCase):
+class TestHelloSignSignature(mocktest.TestCase):
     def setUp(self):
         self.test_uri = 'http://example.com'
         self.auth = ('monkey', 'password')
 
-    def testInvalidSignature(self):
-        self.assertRaises(TypeError, lambda: Signature(base_uri=self.test_uri))
+    def test_InvalidSignature(self):
+        self.assertRaises(TypeError, lambda: HelloSignSignature(base_uri=self.test_uri))
 
-    def testSignatureExceptions(self):
-        subject = Signature(base_uri=self.test_uri, title='title', subject='My Subject', message='My Message')
+    def test_SignatureExceptions(self):
+        subject = HelloSignSignature(base_uri=self.test_uri, title='title', subject='My Subject', message='My Message')
     
         assert subject.base_uri == self.test_uri
     
         self.assertRaises(AttributeError, lambda: subject.create())
-        subject.add_signer({})
+        subject.add_signer(HelloSigner(**{'email':'bob@example.com', 'name': 'Bob Examplar'}))
     
         self.assertRaises(AttributeError, lambda: subject.create())
-        subject.add_doc({})
+        subject.add_doc(HelloDoc(**{'name': '@filename.pdf'}))
 
-    def testSignatureSend(self):
-        subject = Signature(base_uri=self.test_uri, title='title', subject='My Subject', message='My Message')
+    def test_SignatureSend(self):
+        subject = HelloSignSignature(base_uri=self.test_uri, title='title', subject='My Subject', message='My Message')
         when(subject).create(auth=self.auth).then_return({})
-
+        # Test basic params
         assert subject.base_uri == self.test_uri
         assert subject.params['title'] == 'title'
         assert subject.params['subject'] == 'My Subject'
         assert subject.params['message'] == 'My Message'
+        
+        # Test incorrect signers and doc types
+        self.assertRaises(Exception, lambda: subject.add_signer({}))
+        self.assertRaises(Exception, lambda: subject.add_doc({}))
 
-        subject.add_signer({})
+        # add correct signers and doc types and test the lengths increase
+        subject.add_signer(HelloSigner(**{'email':'bob@example.com', 'name': 'Bob Examplar'}))
+        subject.add_doc(HelloDoc(**{'name': '@filename.pdf'}))
         self.assertEqual(len(subject.signers), 1)
-        subject.add_doc({})
         self.assertEqual(len(subject.docs), 1)
 
         response = subject.create(auth=self.auth)
         self.assertEqual(response, {})
+
+    def test_SignatureData(self):
+        subject = HelloSignSignature(base_uri=self.test_uri, title='title', subject='My Subject', message='My Message')
+        when(subject).create(auth=self.auth).then_return({})
+
+        subject.add_signer(HelloSigner(**{'email':'bob@example.com', 'name': 'Bob Examplar'}))
+        subject.add_doc(HelloDoc(**{'name': '@filename.pdf'}))
+
+        json_data = json.dumps(subject.data())
+        self.assertEqual(json_data, 1)
