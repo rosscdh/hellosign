@@ -14,8 +14,8 @@ Installation
 
 Usage
 ============
-    from hellosign.hellosign import HelloSign, HelloSignSignature
-    from hellosign.hellosign import HelloSigner, HelloDoc
+    from hellosign import HelloSign, HelloSignSignature
+    from hellosign import HelloSigner, HelloDoc
 
     authentication = ("username@example.com", "secret_password")
 
