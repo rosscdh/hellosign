@@ -4,6 +4,8 @@ HelloSignApi
 Basic Api Objects for accessing the HelloSign.com Api
 
 Makes use of the excellent requests and nosetests and mocktests libs
+as well as querystring-parser for encoding the requests in the required
+HelloSign format
 
 
 Installation 
@@ -27,16 +29,16 @@ Usage
 
     authentication = ("username@example.com", "secret_password")
 
-    signature = HelloSignSignature()
+    signature = HelloSignSignature(title='title', subject='My Subject', message='My Message')
     signature.add_signer(HelloSigner(**{'email':'bob@example.com', 'name': 'Bob Examplar'}))
     signature.add_doc(HelloDoc(**{'name': '@filename.pdf'}))
     signature.create(auth=authentication)
 
     api = HelloSign()
-    account_info = api.account.get()
+    account_info = api.account.get(auth=authentication)
     form_list = api.reusable_form.list.get()
     params = {...your params...}
-    form_list = api.signature_request.send_with_reusable_form.post(params)
+    form_list = api.signature_request.send_with_reusable_form.post(auth=authentication, **params)
 
 
 Tests

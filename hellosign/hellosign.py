@@ -1,5 +1,6 @@
 from .api import BaseApiClient
 from .hello_objects import HelloSigner, HelloDoc
+from querystring_parser.builder import build
 
 
 class HelloSign(BaseApiClient):
@@ -51,17 +52,18 @@ class HelloSignSignature(HelloSign):
     def data(self):
         data = {
         'signers': [],
-        'files': []
+        'file': []
         }
 
         for i,signer in enumerate(self.signers):
             data['signers'].append({'email_address': signer['email'], 'name': signer['name']})
 
         for i,doc in enumerate(self.docs):
-            data['files'].append(doc['name'])
+            data['file'].append(doc['name'])
 
         data.update(self.params)
-        return data
+
+        return build(data)
 
     def create(self, *args, **kwargs):
         auth = None
