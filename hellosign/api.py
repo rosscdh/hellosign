@@ -6,10 +6,11 @@ class BaseApiClient(object):
     base_uri = None
     r = None
     _resources = []
+
     def __init__(self, *args, **kwargs):
         self._resources = []
         self.r = requests
-        self.base_uri = None if 'base_uri' not in kwargs else kwargs['base_uri']
+        self.base_uri = self.base_uri if 'base_uri' not in kwargs else kwargs['base_uri']
 
     def __getattr__(self, key):
         self._resources.append(key)

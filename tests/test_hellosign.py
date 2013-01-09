@@ -34,6 +34,10 @@ class TestHelloSign(mocktest.TestCase):
     def test_hellosign_init(self):
         eq_(self.subject.base_uri, self.test_uri)
 
+    def test_hellosign(self):
+        subject = HelloSign()
+        eq_(subject.base_uri, 'https://api.hellosign.com/v3/')
+
 
 class TestHelloSigner(mocktest.TestCase):
     def setUp(self):
