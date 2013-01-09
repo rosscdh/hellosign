@@ -30,21 +30,35 @@ or manually:
 
 Usage
 ============
+
     from hellosign import HelloSign, HelloSignSignature
     from hellosign import HelloSigner, HelloDoc
 
     authentication = ("username@example.com", "secret_password")
 
-    signature = HelloSignSignature(title='title', subject='My Subject', message='My Message')
-    signature.add_signer(HelloSigner(**{'email':'bob@example.com', 'name': 'Bob Examplar'}))
-    signature.add_doc(HelloDoc(**{'name': '@filename.pdf'}))
-    signature.create(auth=authentication)
-
+    # Basic Api usage - query is built around the api path i.e: /v3/interesting/feature would be api.interesting.feature.get(auth=authentication)
     api = HelloSign()
     account_info = api.account.get(auth=authentication)
+    print account_info
+
+    # Signature Example - most complete example, with validation of input
+    signature = HelloSignSignature(title='title', subject='My Subject', message='My Message')
+    signature.add_signer(HelloSigner(email='bob@example.com', name='Bob Examplar'))
+    signature.add_doc(HelloDoc(file_path='/path/to/file/filename.pdf'))
+    signature.create(auth=authentication)
+
+    # List of forms - simple GET example
     form_list = api.reusable_form.list.get()
-    params = {...your params...}
+    print form_list
+
+    # Create with a reuseable form - simple POST example, no validation (coming soon)
+    params = {
+    'param_as_defined': 'by_the_hellosign_documentation',
+    'param_as_defined': 'by_the_hellosign_documentation',
+    }
     form_list = api.signature_request.send_with_reusable_form.post(auth=authentication, **params)
+
+
 
 
 Tests
