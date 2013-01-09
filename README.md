@@ -28,7 +28,7 @@ Usage
     authentication = ("username@example.com", "secret_password")
 
     signature = HelloSignSignature()
-    signature.add_signer(HelloSigner(**{'email':'bob@example.com', 'name': 'Bob Examplar'})
+    signature.add_signer(HelloSigner(**{'email':'bob@example.com', 'name': 'Bob Examplar'}))
     signature.add_doc(HelloDoc(**{'name': '@filename.pdf'}))
     signature.create(auth=authentication)
 
