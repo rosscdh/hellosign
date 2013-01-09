@@ -3,9 +3,15 @@ HelloSignApi
 
 Basic Api Objects for accessing the HelloSign.com Api
 
-Makes use of the excellent requests and nosetests and mocktests libs
+Makes use of the excellent requests, WTForms, nosetests and mocktests libs
 as well as querystring-parser for encoding the requests in the required
-HelloSign format
+HelloSign format.
+
+1. Requests: http://docs.python-requests.org/en/latest/
+2. WTForms: http://wtforms.simplecodes.com/docs/1.0.2/
+3. nosetests: https://nose.readthedocs.org/en/latest/#
+4. mocktests: http://gfxmonk.net/dist/doc/mocktest/doc/
+5. querystring-parser:
 
 
 Installation 
