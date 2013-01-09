@@ -9,6 +9,14 @@ Makes use of the excellent requests and nosetests and mocktests libs
 Installation 
 ============
 
+Into your virtualenv or system env:
+
+    python setup.py install
+
+or manually:
+
+    git clone https://github.com/stard0g101/HelloSignApi.git
+    cd HelloSignApi
     pip install -r requirements.txt
 
 
@@ -28,7 +36,7 @@ Usage
     account_info = api.account.get()
     form_list = api.reusable_form.list.get()
     params = {...your params...}
-    form_list = api.signature_request.send_with_reusable_form.get(params)
+    form_list = api.signature_request.send_with_reusable_form.post(params)
 
 
 Tests
