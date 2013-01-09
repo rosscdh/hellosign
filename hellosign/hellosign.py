@@ -26,7 +26,7 @@ class HelloSignSignature(HelloSign):
     def add_signer(self, signer):
         """ Simple dict of {'name': 'John Doe', 'email': 'name@example.com'}"""
         if isinstance(signer, HelloSigner) and signer.validate():
-            self.signers.append(signer.data)
+            self.signers.append(signer)
         else:
             if not signer.validate():
                 raise Exception("HelloSigner Errors %s" % (signers.errors,))
@@ -36,7 +36,7 @@ class HelloSignSignature(HelloSign):
     def add_doc(self, doc):
         """ Simple dict of {'name': '@filename.pdf'}"""
         if isinstance(doc, HelloDoc) and doc.validate():
-            self.docs.append(doc.data)
+            self.docs.append(doc)
         else:
             if not doc.validate():
                 raise Exception("HelloDoc Errors %s" % (doc.errors,))
@@ -52,18 +52,33 @@ class HelloSignSignature(HelloSign):
     def data(self):
         data = {
         'signers': [],
-        'file': []
+        # 'file': []
         }
 
         for i,signer in enumerate(self.signers):
-            data['signers'].append({'email_address': signer['email'], 'name': signer['name']})
+            data['signers'].append({'email_address': signer.data['email'], 'name': signer.data['name']})
 
-        for i,doc in enumerate(self.docs):
-            data['file'].append(doc['name'])
+        # for i,doc in enumerate(self.docs):
+        #     data['file'].append('@' + doc.data['file_path'])
 
         data.update(self.params)
 
         return build(data)
+
+    def files(self):
+        files = []
+
+        for i,doc in enumerate(self.docs):
+            path = doc.data['file_path']
+            name = doc.data['name']
+
+            if name:
+                doc_file = {'file': (name, open(path, 'rb'))}
+            else:
+                doc_file = {'file': open(path, 'rb')}
+
+            files.append(doc_file)
+        return files if len(files) > 0 else None
 
     def create(self, *args, **kwargs):
         auth = None
@@ -73,4 +88,4 @@ class HelloSignSignature(HelloSign):
 
         self.validate()
 
-        return self.signature_request.send.post(auth=auth, data=self.data(), **kwargs)
+        return self.signature_request.send.post(auth=auth, data=self.data(), files=self.files(), **kwargs)
