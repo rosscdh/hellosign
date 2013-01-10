@@ -48,7 +48,7 @@ Usage
     signature.create(auth=authentication)
 
     # List of forms - simple GET example
-    form_list = api.reusable_form.list.get()
+    form_list = api.reusable_form.list.get(auth=authentication)
     print form_list
 
     # Create with a reuseable form - simple POST example, no validation (coming soon)
