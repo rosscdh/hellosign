@@ -14,7 +14,7 @@ setup(
     zip_safe=False,
     install_requires=[
         'WTForms==1.0.2',
-        'requests==1.0.4',
+        'requests==1.1.0',
         'nose==1.2.1',
         'querystring-parser'
      ]
