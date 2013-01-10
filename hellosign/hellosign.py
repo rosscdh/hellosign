@@ -51,34 +51,28 @@ class HelloSignSignature(HelloSign):
 
     def data(self):
         data = {
-        'signers': [],
-        # 'file': []
+        'signers': []
         }
 
         for i,signer in enumerate(self.signers):
             data['signers'].append({'email_address': signer.data['email'], 'name': signer.data['name']})
 
-        # for i,doc in enumerate(self.docs):
-        #     data['file'].append('@' + doc.data['file_path'])
-
+        # Append the initial params
         data.update(self.params)
 
         return build(data)
 
     def files(self):
-        files = []
+        files = {}
 
         for i,doc in enumerate(self.docs):
             path = doc.data['file_path']
-            name = doc.data['name']
+            file_name = 'file[%d]' % (i,)
+            doc_file = (doc.file_name, open(path, 'rb'))
 
-            if name:
-                doc_file = {'file': (name, open(path, 'rb'))}
-            else:
-                doc_file = {'file': open(path, 'rb')}
+            files['%s'%(file_name,)] = doc_file
 
-            files.append(doc_file)
-        return files if len(files) > 0 else None
+        return files
 
     def create(self, *args, **kwargs):
         auth = None

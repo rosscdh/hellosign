@@ -9,11 +9,10 @@ class HelloSigner(Form):
 
 class HelloDoc(Form):
     file_path = TextField('FilePath', [validators.Length(min=3, max=255)])
-    name = TextField('Name', [validators.Length(min=0, max=128)])
 
     @property
     def file_name(self):
-        return os.path.basename(self.file_path.data) if not self.name.data else self.name.data
+        return os.path.basename(self.file_path.data)
 
     @property
     def file(self):
