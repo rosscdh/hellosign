@@ -19,6 +19,8 @@ Installation
 
 Into your virtualenv or system env:
 
+    git clone https://github.com/stard0g101/HelloSignApi.git
+    cd HelloSignApi
     python setup.py install
 
 or manually:
