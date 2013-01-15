@@ -16,6 +16,7 @@ setup(
         'WTForms==1.0.2',
         'requests==1.1.0',
         'nose==1.2.1',
-        'querystring-parser'
+        'querystring-parser',
+        'mocktest'
      ]
 )
