@@ -1,6 +1,11 @@
 import os
 import requests
 
+try:
+    import collections
+except:
+    raise Exception('You need to install ordereddict as you are running on an older version of python.')
+
 
 class BaseApiClient(object):
     base_uri = None
@@ -25,6 +30,10 @@ class BaseApiClient(object):
         self._resources = self._resources[:-1]
         return self
 
+    def hasher(self):
+        """ used to make php type hashes"""
+        return collections.defaultdict(dict)
+
     @property
     def url(self):
         url = os.path.join(self.base_uri, *self._resources)
@@ -42,8 +51,8 @@ class BaseApiClient(object):
     def delete(self, auth=None, **kwargs):
         return self.r.delete(self.url, auth=auth, params=kwargs)
 
-    def post(self, data=None, auth=None, **kwargs):
-        return self.r.post(self.url, auth=auth, data=data, params=kwargs)
+    def post(self, data=None, auth=None, files=None, **kwargs):
+        return self.r.post(self.url, auth=auth, data=data, files=files, params=kwargs)
 
-    def put(self, data=None, auth=None, **kwargs):
-        return self.r.put(self.url, auth=auth, data=data, params=kwargs)
+    def put(self, data=None, auth=None, files=None, **kwargs):
+        return self.r.put(self.url, auth=auth, data=data, files=files, params=kwargs)
