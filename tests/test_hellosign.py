@@ -107,15 +107,15 @@ class TestHelloSignSignature(mocktest.TestCase):
         response = subject.create(auth=self.auth)
         self.assertEqual(response, {})
 
-    # def test_ValidSignatureData(self):
-    #     subject = HelloSignSignature(base_uri=self.test_uri, title='title', subject='My Subject', message='My Message')
-    #     when(subject).create(auth=self.auth).then_return({})
-    # 
-    #     subject.add_signer(HelloSigner(email='bob@example.com', name='Bob Examplar'))
-    #     subject.add_doc(HelloDoc(file_path='@filename.pdf'))
-    # 
-    #     json_data = json.dumps(subject.data())
-    #     self.assertEqual(json_data, '{"files": ["@filename.pdf"], "message": "My Message", "title": "title", "signers": [{"email_address": "bob@example.com", "name": "Bob Examplar"}], "subject": "My Subject"}')
+    def test_ValidSignatureData(self):
+        subject = HelloSignSignature(base_uri=self.test_uri, title='title', subject='My Subject', message='My Message')
+        when(subject).create(auth=self.auth).then_return({})
+    
+        subject.add_signer(HelloSigner(email='bob@example.com', name='Bob Examplar'))
+        subject.add_doc(HelloDoc(file_path='@filename.pdf'))
+    
+        json_data = json.dumps(subject.data())
+        self.assertEqual(json_data, '{"title": "title", "signers[0][name]": "Bob Examplar", "signers[0][email_address]": "bob@example.com", "message": "My Message", "subject": "My Subject"}')
 
     def test_InValidSignatureData(self):
         subject = HelloSignSignature(base_uri=self.test_uri, title='title', subject='My Subject', message='My Message')
