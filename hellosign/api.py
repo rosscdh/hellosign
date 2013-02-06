@@ -52,7 +52,7 @@ class BaseApiClient(object):
         return self.r.delete(self.url, auth=auth, params=kwargs)
 
     def post(self, data=None, auth=None, files=None, **kwargs):
-        return self.r.post(self.url, auth=auth, data=data, files=files, params=kwargs)
+        return self.r.post(self.url, data, auth=auth, files=files, params=kwargs)
 
     def put(self, data=None, auth=None, files=None, **kwargs):
         return self.r.put(self.url, auth=auth, data=data, files=files, params=kwargs)

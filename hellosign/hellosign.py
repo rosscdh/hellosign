@@ -50,19 +50,14 @@ class HelloSignSignature(HelloSign):
             raise AttributeError('You need to specify at least 1 document')
 
     def data(self):
-        data = {
-        'signers': []
-        }
+        data = {}
 
         for i,signer in enumerate(self.signers):
-            data['signers'].append({'name': signer.data['name'], 'email_address': signer.data['email']})
-            # data['signers'][i]['name'] = signer.data['name']
-            # data['signers'][i]['email_address'] = signer.data['email']
+            data['signers[%d][name]' % (i,)] = signer.data['name']
+            data['signers[%d][email_address]' % (i,)] = signer.data['email']
             
-
         # Append the initial params
         data.update(self.params)
-        print data
 
         return data
 
