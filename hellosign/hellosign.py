@@ -32,7 +32,7 @@ class HelloSignSignature(HelloSign):
             self.signers.append(signer)
         else:
             if not signer.validate():
-                raise Exception("HelloSigner Errors %s" % (signers.errors,))
+                raise Exception("HelloSigner Errors %s" % (signer.errors,))
             else:
                 raise Exception("add_signer signer must be an instance of class HelloSigner")
 
@@ -90,9 +90,27 @@ class HelloSignSignature(HelloSign):
             auth = kwargs['auth']
             del(kwargs['auth'])
 
-        self.validate()
+        self.validate_signers()
+        self.validate_docs()
 
         return self.signature_request.send.post(auth=auth, data=self.data(), files=self.files(), **kwargs)
+
+    def create_from_template(self, template_id, custom_fields=None, *args, **kwargs):
+        auth=None
+        if 'auth' in kwargs:
+            auth = kwargs['auth']
+            del(kwargs['auth'])
+
+        self.validate_signers()
+
+        data = self.data()
+        data['reusable_form_id'] = template_id
+
+        if custom_fields:
+            for k, v in custom_fields.items():
+                data['custom_fields[%s]' % k] = v
+
+        return self.signature_request.send_with_reusable_form.post(auth=auth, data=data, **kwargs)
 
 
 class HelloSignEmbeddedDocumentSignature(HelloSignSignature):

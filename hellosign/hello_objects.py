@@ -4,7 +4,7 @@ from wtforms import Form, TextField, validators
 
 class HelloSigner(Form):
     name = TextField('Name', [validators.Length(min=2, max=255)])
-    email = TextField('Email', [validators.Length(min=6, max=255), validators.Email()])
+    email = TextField('Email', [validators.required(), validators.Length(min=6, max=255), validators.Email()])
 
 
 class HelloDoc(Form):
