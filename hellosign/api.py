@@ -58,19 +58,25 @@ class BaseApiClient(object):
             self._url = value
 
     def get(self, auth=None, **kwargs):
-        return self.r.get(self.url, auth=auth, params=kwargs)
+        headers = kwargs.pop('headers', None)
+        return self.r.get(self.url, auth=auth, params=kwargs, headers=headers)
 
     def head(self, auth=None, **kwargs):
-        return self.r.head(self.url, auth=auth, params=kwargs)
+        headers = kwargs.pop('headers', None)
+        return self.r.head(self.url, auth=auth, params=kwargs, headers=headers)
 
     def options(self, auth=None, **kwargs):
-        return self.r.options(self.url, auth=auth, params=kwargs)
+        headers = kwargs.pop('headers', None)
+        return self.r.options(self.url, auth=auth, params=kwargs, headers=headers)
 
     def delete(self, auth=None, **kwargs):
-        return self.r.delete(self.url, auth=auth, params=kwargs)
+        headers = kwargs.pop('headers', None)
+        return self.r.delete(self.url, auth=auth, params=kwargs, headers=headers)
 
     def post(self, data=None, auth=None, files=None, **kwargs):
+        headers = kwargs.pop('headers', None)
         return self.r.post(self.url, data, auth=auth, files=files, params=kwargs)
 
     def put(self, data=None, auth=None, files=None, **kwargs):
-        return self.r.put(self.url, auth=auth, data=data, files=files, params=kwargs)
+        headers = kwargs.pop('headers', None)
+        return self.r.put(self.url, auth=auth, data=data, files=files, params=kwargs, headers=headers)
