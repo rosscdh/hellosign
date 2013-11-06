@@ -38,6 +38,25 @@ class TestHelloSign(mocktest.TestCase):
         subject = HelloSign()
         eq_(subject.base_uri, 'https://api.hellosign.com/v3/')
 
+    def test_url_path_override(self):
+        """
+        Allow user to manually specify a path
+        useful for when a dynamic part of a url is required
+        """
+        subject = HelloSign()
+        subject.url = 'my/special/path'
+        eq_(subject.url, 'https://api.hellosign.com/v3/my/special/path')
+
+        subject.url = '//my/special/path'  # note the double slash
+        eq_(subject.url, 'https://api.hellosign.com/v3/my/special/path')
+
+    def test_full_url_override(self):
+        """
+        User can override url to be whatever they like
+        """
+        subject = HelloSign()
+        subject.url = 'http://example.com/test/my/url'
+        eq_(subject.url, 'http://example.com/test/my/url')
 
 class TestHelloSigner(mocktest.TestCase):
     def setUp(self):
