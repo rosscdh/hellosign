@@ -1,6 +1,8 @@
 import os
 import requests
 
+from urlparse import urlparse
+
 try:
     import collections
 except:
@@ -10,12 +12,15 @@ except:
 class BaseApiClient(object):
     base_uri = None
     r = None
+    _url = None
     _resources = []
 
     def __init__(self, *args, **kwargs):
         self._resources = []
         self.r = requests
+
         self.base_uri = self.base_uri if 'base_uri' not in kwargs else kwargs['base_uri']
+        self._url = None
 
     def __getattr__(self, key):
         self._resources.append(key)
@@ -36,8 +41,21 @@ class BaseApiClient(object):
 
     @property
     def url(self):
-        url = os.path.join(self.base_uri, *self._resources)
-        return url
+        if self._url is None:
+            self.url = '/'.join(self._resources)
+
+        return self._url
+
+    @url.setter
+    def url(self, value):
+        url = urlparse(value)
+        if url.scheme in ['', None]:
+            # no hostname was passed in
+            path = value.split('/')
+            self._url = os.path.join(self.base_uri, *path)
+        else:
+            # passed in a whole url
+            self._url = value
 
     def get(self, auth=None, **kwargs):
         return self.r.get(self.url, auth=auth, params=kwargs)
