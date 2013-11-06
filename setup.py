@@ -13,9 +13,9 @@ setup(
     long_description=open('README.md').read(),
     zip_safe=False,
     install_requires=[
-        'WTForms==1.0.2',
-        'requests==1.1.0',
-        'nose==1.2.1',
+        'WTForms',
+        'requests',
+        'nose',
         'querystring-parser',
         'mocktest'
      ]
