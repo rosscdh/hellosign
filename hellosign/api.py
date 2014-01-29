@@ -57,26 +57,20 @@ class BaseApiClient(object):
             # passed in a whole url
             self._url = value
 
-    def get(self, auth=None, **kwargs):
-        headers = kwargs.pop('headers', None)
-        return self.r.get(self.url, auth=auth, params=kwargs, headers=headers)
+    def get(self, auth=None, data=None, files=None, headers=None, **kwargs):
+        return self.r.get(self.url, auth=auth, data=data, files=files, params=kwargs, headers=headers)
 
-    def head(self, auth=None, **kwargs):
-        headers = kwargs.pop('headers', None)
-        return self.r.head(self.url, auth=auth, params=kwargs, headers=headers)
+    def head(self, auth=None, data=None, files=None, headers=None, **kwargs):
+        return self.r.head(self.url, auth=auth, data=data, files=files, params=kwargs, headers=headers)
 
-    def options(self, auth=None, **kwargs):
-        headers = kwargs.pop('headers', None)
-        return self.r.options(self.url, auth=auth, params=kwargs, headers=headers)
+    def options(self, auth=None, data=None, files=None, headers=None, **kwargs):
+        return self.r.options(self.url, auth=auth, data=data, files=files, params=kwargs, headers=headers)
 
-    def delete(self, auth=None, **kwargs):
-        headers = kwargs.pop('headers', None)
-        return self.r.delete(self.url, auth=auth, params=kwargs, headers=headers)
+    def delete(self, auth=None, data=None, files=None, headers=None, **kwargs):
+        return self.r.delete(self.url, auth=auth, data=data, files=files, params=kwargs, headers=headers)
 
-    def post(self, data=None, auth=None, files=None, **kwargs):
-        headers = kwargs.pop('headers', None)
-        return self.r.post(self.url, data, auth=auth, files=files, params=kwargs)
+    def post(self, auth=None, data=None, files=None, headers=None, **kwargs):
+        return self.r.post(self.url, auth=auth, data=data, files=files, params=kwargs, headers=headers)
 
-    def put(self, data=None, auth=None, files=None, **kwargs):
-        headers = kwargs.pop('headers', None)
+    def put(self, auth=None, data=None, files=None, headers=None, **kwargs):
         return self.r.put(self.url, auth=auth, data=data, files=files, params=kwargs, headers=headers)
