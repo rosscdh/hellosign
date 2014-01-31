@@ -82,3 +82,25 @@ class HelloSignSignature(HelloSign):
         self.validate()
 
         return self.signature_request.send.post(auth=auth, data=self.data(), files=self.files(), **kwargs)
+
+
+class HelloSignEmbeddedDocumentSignature(HelloSignSignature):
+    """
+    Override the url to the embedded form as per emailed beta docs
+    curl -u"EMAIL_ADDRESS:PASSWORD" https://api.hellosign.com/v3/signature_request/create_embedded_with_reusable_form \
+         -F"client_id=YOUR_APP_CLIENT_ID" \
+         -F"reusable_form_id=REUSABLE_FORM_ID" \
+         -F"subject=My First embedded signature request with a reusable form" \
+         -F"message=Isn't it cool" \
+         -F"signers[ROLE_NAME][name]=John Doe" \
+         -F"signers[ROLE_NAME][email_address]=john.doe@domain.com"
+    """
+    def create(self, *args, **kwargs):
+        auth = None
+        if 'auth' in kwargs:
+            auth = kwargs['auth']
+            del(kwargs['auth'])
+
+        self.validate()
+
+        return self.signature_request.create_embedded.post(auth=auth, data=self.data(), files=self.files(), **kwargs)
