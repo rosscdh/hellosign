@@ -3,7 +3,7 @@ from setuptools import find_packages
 
 setup(
     name='hellosign',
-    version='0.1.5',
+    version='0.1.0',
     author="Ross Crawford-d'Heureuse",
     author_email='sendrossemail@gmail.com',
     packages=['hellosign'],
