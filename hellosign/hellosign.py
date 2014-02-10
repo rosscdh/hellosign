@@ -104,3 +104,26 @@ class HelloSignEmbeddedDocumentSignature(HelloSignSignature):
         self.validate()
 
         return self.signature_request.create_embedded.post(auth=auth, data=self.data(), files=self.files(), **kwargs)
+
+
+class HelloSignEmbeddedDocumentSigningUrl(HelloSign):
+    """
+    Once you have sent a document for signing you also need to get "signing url"
+    the signature_url returned in the original
+    HelloSignEmbeddedDocumentSignature.request is NOT the signing url
+    """
+    signature_id = None
+
+    def __init__(self, signature_id, *args, **kwargs):
+        self.signature_id = signature_id
+        super(HelloSignEmbeddedDocumentSigningUrl, self).__init__(*args, **kwargs)
+
+    def create(self, **kwargs):
+        auth = None
+        if 'auth' in kwargs:
+            auth = kwargs['auth']
+            del(kwargs['auth'])
+
+        self._url = '%s%s%s' % (self.base_uri, 'embedded/sign_url/', self.signature_id)
+
+        return self.embedded.sign_url.get(auth=auth, **kwargs)
