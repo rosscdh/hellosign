@@ -1,5 +1,5 @@
-HelloSignApi
-============
+HelloSign Api Client
+====================
 
 Basic Api Objects for accessing the HelloSign.com Api
 
