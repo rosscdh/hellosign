@@ -119,6 +119,13 @@ class HelloSignEmbeddedDocumentSigningUrl(HelloSign):
         super(HelloSignEmbeddedDocumentSigningUrl, self).__init__(*args, **kwargs)
 
     def create(self, **kwargs):
+        """
+        returns the JSON object
+        {'embedded': {
+          'sign_url': 'https://www.hellosign.com/editor/embeddedSign?signature_id={signature_id}&token={token}',
+          'expires_at': {timestamp}
+        }}        
+        """
         auth = None
         if 'auth' in kwargs:
             auth = kwargs['auth']
