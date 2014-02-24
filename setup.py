@@ -8,7 +8,7 @@ setup(
     author_email='sendrossemail@gmail.com',
     packages=['hellosign'],
     include_package_data=True,
-    url='https://github.com/stard0g101/HelloSignApi',
+    url='https://github.com/stard0g101/hellosign',
     description='Module for interacting with the HelloSign service',
     long_description=open('README.md').read(),
     zip_safe=False,
