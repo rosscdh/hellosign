@@ -87,7 +87,7 @@ class HelloSignSignature(HelloSign):
 class HelloSignEmbeddedDocumentSignature(HelloSignSignature):
     """
     Override the url to the embedded form as per emailed beta docs
-    curl -u"EMAIL_ADDRESS:PASSWORD" https://api.hellosign.com/v3/signature_request/create_embedded_with_reusable_form \
+    curl -u"EMAIL_ADDRESS:PASSWORD" https://api.hellosign.com/v3/signature_request/create_embedded \
          -F"client_id=YOUR_APP_CLIENT_ID" \
          -F"reusable_form_id=REUSABLE_FORM_ID" \
          -F"subject=My First embedded signature request with a reusable form" \
@@ -119,6 +119,13 @@ class HelloSignEmbeddedDocumentSigningUrl(HelloSign):
         super(HelloSignEmbeddedDocumentSigningUrl, self).__init__(*args, **kwargs)
 
     def create(self, **kwargs):
+        """
+        returns the JSON object
+        {'embedded': {
+          'sign_url': 'https://www.hellosign.com/editor/embeddedSign?signature_id={signature_id}&token={token}',
+          'expires_at': {timestamp}
+        }}        
+        """
         auth = None
         if 'auth' in kwargs:
             auth = kwargs['auth']
