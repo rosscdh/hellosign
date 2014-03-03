@@ -1,11 +1,10 @@
 from distutils.core import setup
 from setuptools import find_packages
-from hellosign.version import __version__
 
 setup(
     name='hellosign',
     packages=['hellosign'],
-    version=__version__,
+    version='0.1.0',
     author="Ross Crawford-d'Heureuse",
     author_email='sendrossemail@gmail.com',
     include_package_data=True,
