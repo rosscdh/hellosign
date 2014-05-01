@@ -66,7 +66,7 @@ class HelloSignSignature(HelloSign):
             'file': ()
         }
 
-        for i,doc in enumerate(self.docs):
+        for i, doc in enumerate(self.docs):
             path = doc.data['file_path']
 
             files['file'] = open(path, 'rb')
@@ -162,6 +162,9 @@ class HelloSignUnclaimedDraftDocumentSignature(HelloSignSignature):
         if 'auth' in kwargs:
             auth = kwargs['auth']
             del(kwargs['auth'])
+
+        # not valid for this type of signature request
+        del self.params['title']
 
         self.validate()
 
