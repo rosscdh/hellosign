@@ -134,3 +134,40 @@ class HelloSignEmbeddedDocumentSigningUrl(HelloSign):
         self._url = '%s%s%s' % (self.base_uri, 'embedded/sign_url/', self.signature_id)
 
         return self.embedded.sign_url.get(auth=auth, **kwargs)
+
+
+class HelloSignUnclaimedDraftDocumentSignature(HelloSignSignature):
+    """
+    NB: from beta docs
+    There is also a way to specify ahead of time who needs to signer and be CC'd.
+    In this case the user won't be asked to input those values but only where they need to fill in the document.
+    curl -u"API_KEY:" https://api.hellosign.com/v3/unclaimed_draft/create_embedded \
+         -F"client_id=YOUR_APP_CLIENT_ID" \
+         -F"requester_email_address=requester@example.com" \ 
+         -F"file[0]=@FILE_PATH" \
+         -F"file[1]=@ANOTHER_FILE_PATH" \
+         -F"type=request_signature" \
+         -F"subject=Embedded Signature Request" \ 
+         -F"message=This is the message that goes along with your request." \ 
+         -F"is_for_embedded_signing=1" \ ## Added by rosscdh for a mix we want embedded signing too
+         -F"signers[0][name]=John Doe" \ 
+         -F"signers[0][email_address]=john.doe@example.com" \ 
+         -F"signers[1][name]=Jane Doe" \ 
+         -F"signers[1][email_address]=jane.doe@example.com" \ 
+         -F"cc_email_addresses[0]=some.guy@example.com",
+         -F"test_mode=1"
+    """
+    def create(self, *args, **kwargs):
+        auth = None
+        if 'auth' in kwargs:
+            auth = kwargs['auth']
+            del(kwargs['auth'])
+
+        self.validate()
+
+        kwargs.update({
+            'type': 'request_signature',
+            'is_for_embedded_signing': 1,
+        })
+
+        return self.unclaimed_draft.create_embedded.post(auth=auth, data=self.data(), files=self.files(), **kwargs)

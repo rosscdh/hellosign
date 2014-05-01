@@ -3,5 +3,6 @@ from .api import BaseApiClient
 from .hellosign import (HelloSign,
                         HelloSignSignature,
                         HelloSignEmbeddedDocumentSignature,
-                        HelloSignEmbeddedDocumentSigningUrl)
+                        HelloSignEmbeddedDocumentSigningUrl,
+                        HelloSignUnclaimedDraftDocumentSignature)
 from .hello_objects import HelloSigner, HelloDoc
