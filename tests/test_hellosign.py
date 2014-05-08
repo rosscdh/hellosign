@@ -90,9 +90,6 @@ class TestHelloSignSignature(mocktest.TestCase):
         self.test_uri = 'http://example.com'
         self.auth = ('monkey', 'password')
 
-    def test_InvalidSignature(self):
-        self.assertRaises(TypeError, lambda: HelloSignSignature(base_uri=self.test_uri))
-
     def test_SignatureExceptions(self):
         subject = HelloSignSignature(base_uri=self.test_uri, title='title', subject='My Subject', message='My Message')
     

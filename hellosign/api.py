@@ -57,8 +57,12 @@ class BaseApiClient(object):
             # passed in a whole url
             self._url = value
 
-    def get(self, auth=None, data=None, files=None, headers=None, **kwargs):
-        return self.r.get(self.url, auth=auth, data=data, files=files, params=kwargs, headers=headers)
+    def get(self, url=None, auth=None, headers=None, **kwargs):
+
+        if url is not None:  # allow override
+            self.url = url
+
+        return self.r.get(self.url, auth=auth, params=kwargs, headers=headers)
 
     def head(self, auth=None, data=None, files=None, headers=None, **kwargs):
         return self.r.head(self.url, auth=auth, data=data, files=files, params=kwargs, headers=headers)

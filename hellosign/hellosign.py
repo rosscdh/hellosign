@@ -7,19 +7,22 @@ class HelloSign(BaseApiClient):
 
 
 class HelloSignSignature(HelloSign):
+    kwargs = None
     params = {}
     signers = []
     docs = []
 
-    def __init__(self, title, subject, message, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         # Reinitialze params always
         self.params = {}
         self.signers = []
         self.docs = []
 
-        self.params['title'] = title
-        self.params['subject'] = subject
-        self.params['message'] = message
+        self.kwargs = kwargs
+
+        self.params['title'] = kwargs.get('title')
+        self.params['subject'] = kwargs.get('subject')
+        self.params['message'] = kwargs.get('message')
 
         super(HelloSignSignature, self).__init__(*args, **kwargs)
 
@@ -72,6 +75,9 @@ class HelloSignSignature(HelloSign):
             files['file'] = open(path, 'rb')
 
         return files
+
+    def detail(self, signature_request_id, auth):
+        return self.get(url='signature_request/%s' % signature_request_id, auth=auth)
 
     def create(self, *args, **kwargs):
         auth = None
@@ -157,6 +163,10 @@ class HelloSignUnclaimedDraftDocumentSignature(HelloSignSignature):
          -F"cc_email_addresses[0]=some.guy@example.com",
          -F"test_mode=1"
     """
+    def detail(self, claim_id, auth):
+        raise NotImplementedError
+        return self.get(url='unclaimed_draft/%s' % claim_id, auth=auth)
+
     def create(self, *args, **kwargs):
         auth = None
         if 'auth' in kwargs:
