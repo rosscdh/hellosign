@@ -76,7 +76,12 @@ class HelloSignSignature(HelloSign):
 
         return files
 
-    def detail(self, signature_request_id, auth):
+    def detail(self, auth, signature_request_id=None):
+        signature_request_id = self.kwargs.get('signature_request_id', self.kwargs.get('signature_id', signature_request_id))
+
+        if signature_request_id is None:
+            raise Exception('You must pass signature_request_id into detail or at the init of the class')
+
         return self.get(url='signature_request/%s' % signature_request_id, auth=auth)
 
     def create(self, *args, **kwargs):
@@ -112,7 +117,7 @@ class HelloSignEmbeddedDocumentSignature(HelloSignSignature):
         return self.signature_request.create_embedded.post(auth=auth, data=self.data(), files=self.files(), **kwargs)
 
 
-class HelloSignEmbeddedDocumentSigningUrl(HelloSign):
+class HelloSignEmbeddedDocumentSigningUrl(HelloSignSignature):
     """
     Once you have sent a document for signing you also need to get "signing url"
     the signature_url returned in the original
