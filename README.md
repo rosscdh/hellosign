@@ -14,21 +14,21 @@ Makes use of the excellent requests, WTForms, nosetests and mocktests libs.
 Django implementation
 =====================
 
-[django-hellosign](https://github.com/rosscdh/django-hello_sign "Django Wrapper") 
+[django-hellosign implementation](https://github.com/rosscdh/django-hello_sign "Django Wrapper") 
 
 Installation 
 ============
 
 Into your virtualenv or system env:
 
-    git clone https://github.com/stard0g101/HelloSignApi.git
-    cd HelloSignApi
+    git clone https://github.com/rosscdh/hellosign.git
+    cd hellosign
     python setup.py install
 
 or manually:
 
-    git clone https://github.com/stard0g101/HelloSignApi.git
-    cd HelloSignApi
+    git clone https://github.com/rosscdh/hellosign.git
+    cd hellosign
     pip install -r requirements.txt
 
 
