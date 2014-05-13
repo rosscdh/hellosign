@@ -1,5 +1,5 @@
 HelloSign Api Client
-====================
+--------------------
 
 Basic Api Objects for accessing the HelloSign.com Api
 
@@ -12,12 +12,12 @@ Makes use of the excellent requests, WTForms, nosetests and mocktests libs.
 
 
 Django implementation
-=====================
+---------------------
 
 [django-hellosign implementation](https://github.com/rosscdh/django-hello_sign "Django Wrapper") 
 
 Installation 
-============
+------------
 
 Into your virtualenv or system env:
 
@@ -33,7 +33,7 @@ or manually:
 
 
 Usage
-============
+-----
 
     from hellosign import HelloSign, HelloSignSignature
     from hellosign import HelloSigner, HelloDoc
@@ -66,7 +66,15 @@ Usage
 
 
 Tests
-============
+-----
 
     nosetests -w tests/
 
+
+
+Authors
+-------
+
+* Ross Crawford-d'Heureuse @rosscdh
+* Greg Hinch @ghinch
+* @isnotahippy
