@@ -47,8 +47,14 @@ class HelloSignSignature(HelloSign):
                 raise Exception("add_doc doc must be an instance of class HelloDoc")
 
     def validate(self):
+        self.validate_signers()
+        self.validate_docs()
+
+    def validate_signers(self):
         if len(self.signers) == 0:
             raise AttributeError('You need to specify at least 1 person as a signer')
+
+    def validate_docs(self):
         if len(self.docs) == 0:
             raise AttributeError('You need to specify at least 1 document')
 
@@ -90,8 +96,7 @@ class HelloSignSignature(HelloSign):
             auth = kwargs['auth']
             del(kwargs['auth'])
 
-        self.validate_signers()
-        self.validate_docs()
+        self.validate()
 
         return self.signature_request.send.post(auth=auth, data=self.data(), files=self.files(), **kwargs)
 
