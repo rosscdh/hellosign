@@ -1,5 +1,9 @@
+# -*- coding: UTF-8 -*-
 from .api import BaseApiClient
 from .hello_objects import HelloSigner, HelloDoc
+
+from tempfile import NamedTemporaryFile
+from simplejson import JSONDecodeError
 
 
 class HelloSign(BaseApiClient):
@@ -167,10 +171,11 @@ class HelloSignUnclaimedDraftDocumentSignature(HelloSignSignature):
          -F"signers[1][email_address]=jane.doe@example.com" \ 
          -F"cc_email_addresses[0]=some.guy@example.com",
          -F"test_mode=1"
+
+    # The detail method MUST be called to get the valid embedded signing url
     """
-    def detail(self, claim_id, auth):
-        raise NotImplementedError
-        return self.get(url='unclaimed_draft/%s' % claim_id, auth=auth)
+    def detail(self, signature_request_id, auth):
+        return self.get(url='/embedded/sign_url/%s' % signature_request_id, auth=auth)
 
     def create(self, *args, **kwargs):
         auth = None
@@ -189,3 +194,32 @@ class HelloSignUnclaimedDraftDocumentSignature(HelloSignSignature):
         })
 
         return self.unclaimed_draft.create_embedded.post(auth=auth, data=self.data(), files=self.files(), **kwargs)
+
+
+class DownloadFinalCopyException(Exception):
+    pass
+
+
+class HelloSignFinalCopy(HelloSign):
+    """
+    Basic object to allow download of the document provided by HelloSign
+    """
+    DownloadFinalCopyException = DownloadFinalCopyException
+
+    def download(self, signature_id, auth):
+        #return self.get(url=final_copy_uri, auth=auth)
+        resp = self.get(url='/signature_request/final_copy/%s' % signature_id, auth=auth)
+
+        try:
+
+            resp.json().keys()
+
+        except JSONDecodeError as e:
+            #
+            # the json object does not exist because this is a file download
+            # and is valid " it must be a duck"
+            #
+            return resp.content
+        else:
+            raise DownloadFinalCopyException('Failed to download HelloSignFinalCopy: %s' % resp.json())
+
